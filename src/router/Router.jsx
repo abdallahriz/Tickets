@@ -13,9 +13,9 @@ const RouterComponent = () => {
       <Suspense fallback={<Loader open={true} />}>
         <Switch>
           <Route exact path="/" component={Ticket} />
-          <Route exact path="/tickets" component={Ticket} />
-          <Route exact path="/multiple-select" component={MultipleSelect} />
-          <Route exact path="/phone" component={PhoneComponent} />
+          <Route path="/tickets" component={Ticket} />
+          <Route path="/multiple-select" component={MultipleSelect} />
+          <Route path="/phone" component={PhoneComponent} />
         </Switch>
       </Suspense>
     </Router>
