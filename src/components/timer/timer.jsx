@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Timer = props => {
-  const {
-    setMinute,
-    setSecond,
-    setIsActive,
-    setCounter,
-    minute,
-    second,
-    isActive,
-    counter
-  } = props;
+  const { setMinute, setSecond, setCounter, minute, second, isActive, counter } = props;
 
   useEffect(() => {
     let intervalId;
@@ -33,8 +24,7 @@ const Timer = props => {
     }
 
     return () => clearInterval(intervalId);
-  }, [isActive, counter]);
-
+  }, [isActive, counter, setCounter, setMinute, setSecond]);
 
   return (
     <div>

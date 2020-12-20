@@ -120,7 +120,6 @@ export const GoalAndTitleForm = props => {
                       <Select
                         value={values["goal"]}
                         name={"goal"}
-                        onChange={handleChange}
                         disableUnderline
                         IconComponent={ExpandMoreIcon}
                         MenuProps={{
