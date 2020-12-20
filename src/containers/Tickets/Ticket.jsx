@@ -1,34 +1,12 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { Badge, Grid } from "@material-ui/core";
-import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
+import { Grid } from "@material-ui/core";
 import * as Yup from "yup";
-import { TicketsMenu } from "../components/ticketComponents/ticketsMenu";
-import { GoalAndTitleForm } from "../components/ticketComponents/GoalAndTitleForm";
-import { MessagesAndActions } from "../components/ticketComponents/messagesAndActions";
-import { arrayMove } from "../utils";
-import { listOFTickets } from "../constants/TicketsList";
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    root: {
-      flexGrow: 1
-    },
-
-    container: {
-      height: "100vh"
-    }
-  })
-);
-
-export const EnhancedBadge = withStyles(theme => ({
-  anchorOriginBottomRightRectangle: {
-    backgroundColor: props => props.backgroundColor,
-    right: 10,
-    bottom: 4,
-    padding: 5,
-    borderRadius: 8
-  }
-}))(Badge);
+import { TicketsMenu } from "../../components/TicketComponents/TicketsMenu/TicketsMenu";
+import { GoalAndTitleForm } from "../../components/TicketComponents/GoadAndTitleForm/GoalAndTitleForm";
+import { MessagesAndActions } from "../../components/TicketComponents/MessagesAndActions/MessagesAndActions";
+import { arrayMove } from "../../utils";
+import { listOFTickets } from "../../constants/TicketsList";
+import { useStyles } from './Tickets.style';
 
 export const statusTypes = {
   New: "New",

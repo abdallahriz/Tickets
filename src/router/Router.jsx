@@ -3,9 +3,9 @@ import { Route, Router, Switch } from "react-router-dom";
 import Loader from "../components/common/Loader";
 import history from './history';
 
-const Ticket = lazy(() => import("../containers/Ticket"));
-const MultipleSelect = lazy(() => import("../containers/MultipleSelect"))
-const PhoneComponent = lazy(() => import("../containers/PhoneComponent"))
+const Ticket = lazy(() => import("../containers/Tickets/Ticket"));
+const MultipleSelect = lazy(() => import("../containers/MultipleSelect/MultipleSelect"))
+const PhoneComponent = lazy(() => import("../containers/PhoneComponent/PhoneComponent"))
 
 const RouterComponent = () => {
   return (
