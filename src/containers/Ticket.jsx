@@ -1,13 +1,12 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Badge, Grid } from "@material-ui/core";
-
 import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
-
 import * as Yup from "yup";
 import { TicketsMenu } from "../components/ticketComponents/ticketsMenu";
-import { AddGoalAndTitleForm } from "../components/ticketComponents/addGoalAndTitleForm";
+import { GoalAndTitleForm } from "../components/ticketComponents/GoalAndTitleForm";
 import { MessagesAndActions } from "../components/ticketComponents/messagesAndActions";
 import { arrayMove } from "../utils";
+import { listOFTickets } from "../constants/TicketsList";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -31,64 +30,7 @@ export const EnhancedBadge = withStyles(theme => ({
   }
 }))(Badge);
 
-const listOFTickets = [
-  {
-    ticket: {
-      id: 1111,
-      title: "New Task",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  },
-  {
-    ticket: {
-      id: 2222,
-      title: "New Task2",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  },
-  {
-    ticket: {
-      id: 3331,
-      title: "New Task3",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  },
-  {
-    ticket: {
-      id: 3533,
-      title: "New Task4",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  },
-  {
-    ticket: {
-      id: 3333,
-      title: "New Task5",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  },
-  {
-    ticket: {
-      id: 3334,
-      title: "New Task6",
-      assigne: "Abdallah Rizeq",
-      status: "New",
-      Goal: "Buy a product"
-    }
-  }
-];
-
-const statusTypes = {
+export const statusTypes = {
   New: "New",
   Closed: "Closed",
   Has_New_Message: "Has_New_Message",
@@ -109,22 +51,19 @@ const Ticket = () => {
   const [selectedTicketMessages, setSelectedTicketMessages] = useState(tickets[0]);
 
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
-  const handleSetSelectedTiket = ticket => {
-    setSelectedTicket(ticket);
-  };
 
   const options = [
-    { option: " Buy a Product", value: 0 },
-    { option: " Cancel an account", value: 1 },
-    { option: " Buy and recommend a gift", value: 2 },
-    { option: " Ask For Business", value: 3 }
+    { option: "Buy a Product", value: 0 },
+    { option: "Cancel an account", value: 1 },
+    { option: "Buy and recommend a gift", value: 2 },
+    { option: "Ask For Business", value: 3 }
   ];
 
-
   const initialValues = {
-    goal: options[0],
+    goal: 0,
     taskName: ""
   };
+
   const validationSchema = Yup.object().shape({
     goal: Yup.string().required("Required"),
     taskName: Yup.string()
@@ -133,85 +72,83 @@ const Ticket = () => {
       .max(25, "Should be less than 25 character")
   });
 
+  const handleSetSelectedTiket = ticket => {
+    setSelectedTicket(ticket);
+  };
+
   const handleSumbit = () => {
     setIsActive(true);
     setShouldDisableMessageText(false);
   };
 
-  const getBadgeColor = status => {
-    switch (status) {
-      case statusTypes.New:
-        return "#3DBED2";
-      case statusTypes.Has_New_Message:
-        return "#E06868";
-      case statusTypes.Snoozed:
-        return "#FEC573";
-      default:
-        break;
-    }
-  };
-
   const handleSendMessage = value => {
-    setMessages([
-      ...messages,
-      {
-        value: value,
-        time: new Date(Date.now()).toString(),
-        tickedId: selectedTicket.ticket.id
-      }
-    ]);
-    setSelectedTicketMessages([
-      ...selectedTicketMessages,
-      {
-        value: value,
-        time: new Date(Date.now()).toString(),
-        tickedId: selectedTicket.ticket.id
-      }
-    ]);
-
-    const ticketsArray = tickets;
-    const filteredTickets =
-      ticketsArray.length > 0 &&
-      ticketsArray.map(ticketObj => {
-        if (ticketObj.ticket.id === selectedTicket.ticket.id) {
-          ticketObj.ticket.status = statusTypes.Has_New_Message;
-          return ticketObj;
+    try {
+      setMessages([
+        ...messages,
+        {
+          value: value,
+          time: new Date(Date.now()).toString(),
+          tickedId: selectedTicket.ticket.id
         }
-        return ticketObj;
-      });
-    setTickets(filteredTickets);
+      ]);
+      setSelectedTicketMessages([
+        ...selectedTicketMessages,
+        {
+          value: value,
+          time: new Date(Date.now()).toString(),
+          tickedId: selectedTicket.ticket.id
+        }
+      ]);
+
+      const ticketsArray = tickets;
+      const filteredTickets =
+        ticketsArray.length > 0 &&
+        ticketsArray.map(ticketObj => {
+          if (ticketObj.ticket.id === selectedTicket.ticket.id) {
+            ticketObj.ticket.status = statusTypes.Has_New_Message;
+            return ticketObj;
+          }
+          return ticketObj;
+        });
+      setTickets(filteredTickets);
+    } catch {}
   };
 
   const deleteTicket = () => {
-    const ticketsArray = tickets;
-    const filteredTickets =
-      ticketsArray.length > 0 &&
-      ticketsArray.filter(ticketObj => {
-        if (ticketObj.ticket.id === selectedTicket.ticket.id) {
-          ticketObj.ticket.status = statusTypes.Closed;
-          return;
-        }
-        return ticketObj;
-      });
+    try {
+      const ticketsArray = tickets;
+      const filteredTickets =
+        ticketsArray.length > 0 &&
+        ticketsArray.filter(ticketObj => {
+          if (ticketObj.ticket.id === selectedTicket.ticket.id) {
+            ticketObj.ticket.status = statusTypes.Closed;
+            return;
+          }
+          return ticketObj;
+        });
 
-    setSelectedTicket(filteredTickets[0]);
-    setTickets(filteredTickets);
+      setSelectedTicket(filteredTickets[0]);
+      setTickets(filteredTickets);
+    } catch {}
   };
 
   const handleChangeTicketStatusToSnoozed = () => {
-    setIsActive(false);
-    setCounter(0);
-    setSecond("00");
-    setMinute("00");
-    const ticketsArray = tickets;
-    //move snoozed ticket to the last of the array
-    ticketsArray.length > 0 &&
-      ticketsArray.map((ticketObj, index) => {
-        if (ticketObj.ticket.id === selectedTicket.ticket.id) {
-          ticketObj.ticket.status = statusTypes.Snoozed;
-          setTickets(arrayMove(ticketsArray, index, ticketsArray.length - 1));
-        }
-      });
+    try {
+      setIsActive(false);
+      setCounter(0);
+      setSecond("00");
+      setMinute("00");
+      const ticketsArray = tickets;
+      //move snoozed ticket to the last of the array
+      Array.isArray(ticketsArray) &&
+        ticketsArray.length > 0 &&
+        ticketsArray.map((ticketObj, index) => {
+          if (ticketObj.ticket.id === selectedTicket.ticket.id) {
+            ticketObj.ticket.status = statusTypes.Snoozed;
+            setTickets(arrayMove(ticketsArray, index, ticketsArray.length - 1));
+          }
+        });
+    } catch {}
   };
 
   useEffect(() => {
@@ -246,13 +183,12 @@ const Ticket = () => {
         <Grid item xs={1}>
           <TicketsMenu
             tickets={tickets}
-            getBadgeColor={getBadgeColor}
             selectedTicket={selectedTicket}
             handleSetSelectedTiket={handleSetSelectedTiket}
           />
         </Grid>
         <Grid item xs={4}>
-          <AddGoalAndTitleForm
+          <GoalAndTitleForm
             initialValues={initialValues}
             handleSumbit={handleSumbit}
             validationSchema={validationSchema}

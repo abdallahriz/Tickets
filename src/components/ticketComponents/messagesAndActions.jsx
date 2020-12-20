@@ -153,19 +153,25 @@ export const MessagesAndActions = props => {
   const ref = useRef();
 
   const handleOnKeyMessagePress = event => {
-    if (event.key === "Enter") {
-      handleSendMessage(event.target.value);
-      setMessageFieldValue("");
-    }
+    try {
+      if (event.key === "Enter") {
+        handleSendMessage(event.target.value);
+        setMessageFieldValue("");
+      }
+    } catch {}
   };
 
   const handleOnChange = event => {
-    setMessageFieldValue(event.target.value);
+    try {
+      setMessageFieldValue(event.target.value);
+    } catch {}
   };
 
   const handleOnSendClick = () => {
-    handleSendMessage(messageFieldValue);
-    setMessageFieldValue("");
+    try {
+      handleSendMessage(messageFieldValue);
+      setMessageFieldValue("");
+    } catch {}
   };
 
   const heightOfTextField =

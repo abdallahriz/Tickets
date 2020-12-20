@@ -1,6 +1,7 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import { Avatar, Badge } from "@material-ui/core";
-import { makeStyles, createStyles, Theme, withStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles, withStyles } from "@material-ui/core/styles";
+import {statusTypes} from '../../containers/Ticket';
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -43,9 +44,17 @@ const useStyles = makeStyles(theme =>
       padding: 5,
       borderRadius: 8
     },
-
     userBadge: {
       margin: 15
+    },
+    newBadge: {
+        backgroundColor: "#3DBED2"
+    },
+    hasNewMessageBadge: {
+        backgroundColor: "#E06868"
+    },
+    snoozedBadge:{
+        backgroundColor: "#FEC573"
     }
   })
 );
@@ -61,8 +70,22 @@ export const EnhancedBadge = withStyles(theme => ({
 }))(Badge);
 
 export const TicketsMenu = props => {
-  const { tickets, getBadgeColor, selectedTicket, handleSetSelectedTiket } = props;
+  const { tickets, selectedTicket, handleSetSelectedTiket } = props;
   const classes = useStyles();
+
+  const getBadgeClassName = (ticketStatus) => {
+    switch (ticketStatus) {
+        case statusTypes.New:
+          return classes.newBadge;
+        case statusTypes.Has_New_Message:
+          return classes.hasNewMessageBadge;
+        case statusTypes.Snoozed:
+          return classes.snoozedBadge;
+        default:
+          break;
+      }
+  }
+  
   return (
     <div className={classes.sideMenu}>
       <Badge
@@ -81,9 +104,9 @@ export const TicketsMenu = props => {
           src={"https://upload.wikimedia.org/wikipedia/commons/a/a0/Pierre-Person.jpg"}
         />
       </Badge>
-      {tickets.length > 0 &&
+      {Array.isArray(tickets) && tickets.length > 0 &&
         tickets.map((ticketObj, index) => {
-          const backgroundColor = getBadgeColor(ticketObj.ticket.status);
+          const badgeClass = getBadgeClassName(ticketObj.ticket.status);
           return (
             <Fragment key={ticketObj.ticket.id}>
               {selectedTicket.ticket.id === ticketObj.ticket.id ? (
@@ -94,14 +117,14 @@ export const TicketsMenu = props => {
                   {"T" + (index + 1)}
                 </Avatar>
               ) : (
-                <EnhancedBadge
+                <Badge
                   anchorOrigin={{
                     vertical: "bottom",
                     horizontal: "right"
                   }}
                   variant="dot"
                   className={classes.badge}
-                  backgroundColor={backgroundColor}
+                  classes={{anchorOriginBottomRightRectangle: `${badgeClass} ${classes.bottomRightBadge}`}}
                 >
                   <Avatar
                     onClick={() => handleSetSelectedTiket(ticketObj)}
@@ -109,7 +132,7 @@ export const TicketsMenu = props => {
                   >
                     {"T" + (index + 1)}
                   </Avatar>
-                </EnhancedBadge>
+                </Badge>
               )}
             </Fragment>
           );

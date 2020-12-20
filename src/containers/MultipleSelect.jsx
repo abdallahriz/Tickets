@@ -81,17 +81,20 @@ const MultipleSelect = () => {
   const classes = useStyles();
 
   const handleSearchQuestions = event => {
-    const filteredQuestions =
-      QuestionsFields &&
-      QuestionsFields.length > 0 &&
-      QuestionsFields.filter(function (obj) {
-        return obj.question.toLowerCase().includes(event.target.value.toLowerCase());
-      });
-    if (filteredQuestions.length > 0) {
-      setQuestions(filteredQuestions);
-    } else {
-      setQuestions([]);
-    }
+    try {
+      const filteredQuestions =
+        Array.isArray(QuestionsFields) &&
+        QuestionsFields &&
+        QuestionsFields.length > 0 &&
+        QuestionsFields.filter(function (obj) {
+          return obj.question.toLowerCase().includes(event.target.value.toLowerCase());
+        });
+      if (filteredQuestions.length > 0) {
+        setQuestions(filteredQuestions);
+      } else {
+        setQuestions([]);
+      }
+    } catch {}
   };
 
   const handleOnChange = event => {
@@ -100,18 +103,21 @@ const MultipleSelect = () => {
   };
 
   const handleOptionClick = option => {
-    const filteredQuestions =
-      QuestionsFields &&
-      QuestionsFields.length > 0 &&
-      QuestionsFields.map(obj => {
-        if (obj.id === option.id) {
-          obj.disabled = true;
+    try {
+      const filteredQuestions =
+        Array.isArray(QuestionsFields) &&
+        QuestionsFields &&
+        QuestionsFields.length > 0 &&
+        QuestionsFields.map(obj => {
+          if (obj.id === option.id) {
+            obj.disabled = true;
+            return obj;
+          }
           return obj;
-        }
-        return obj;
-      });
+        });
 
-    setQuestions(filteredQuestions);
+      setQuestions(filteredQuestions);
+    } catch {}
   };
 
   return (

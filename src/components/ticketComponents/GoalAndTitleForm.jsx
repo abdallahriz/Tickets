@@ -91,7 +91,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export const AddGoalAndTitleForm = props => {
+export const GoalAndTitleForm = props => {
   const classes = useStyles();
   const { initialValues, handleSumbit, validationSchema, options } = props;
 
@@ -102,7 +102,6 @@ export const AddGoalAndTitleForm = props => {
       validationSchema={validationSchema}
     >
       {({ values, handleChange, errors }) => {
-          console.log(values)
         return (
           <Form className={classes.form}>
             <div className={classes.controlPaper}>
@@ -130,13 +129,16 @@ export const AddGoalAndTitleForm = props => {
                         }}
                         onChange={handleChange("goal")}
                       >
-                        {options.length > 0 &&
-                          options.map(option => (
-                            <MenuItem className={classes.select} value={option.value}>
+                        {Array.isArray(options) && options.length > 0 &&
+                          options.map((option, index) => (
+                            <MenuItem
+                              key={option + index}
+                              className={classes.select}
+                              value={option.value}
+                            >
                               {option.option}
                             </MenuItem>
                           ))}
-                        
                       </Select>
                     </FormControl>
                     {errors.goal && (

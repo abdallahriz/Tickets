@@ -10,7 +10,11 @@ import {
 } from "@material-ui/core";
 import ReactCountryFlag from "react-country-flag";
 import { countries } from "../constants/CountriesList";
-import {PHONE_NUMBER_PLACE_HOLDER , SEARCH_INPUT_PLEACE_HOLDER, NO_RESULT} from '../constants/phone.contants';
+import {
+  PHONE_NUMBER_PLACE_HOLDER,
+  SEARCH_INPUT_PLEACE_HOLDER,
+  NO_RESULT
+} from "../constants/phone.contants";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -22,10 +26,10 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       justifyContent: "center"
     },
-    wrapper:{
-        display: "flex",
-        justifyContent:"center",
-        alignItems: "center"
+    wrapper: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
     },
     TextField: {
       margin: "5px 0",
@@ -93,7 +97,7 @@ const useStyles = makeStyles(theme =>
       marginTop: 15,
       maxHeight: "300px",
       overflow: "auto",
-      maxWidth: "296px",
+      maxWidth: "296px"
     },
     optionsWrapper: {
       margin: 12,
@@ -121,29 +125,35 @@ const PhoneComponent = () => {
   const [openWidget, setOpenWidget] = useState(false);
   const [shouldShowNoResult, setShouldShowNoResult] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(formattedCountriesList[228]);
+  const [searchTextFieldValue, setSerchTextFieldValue] = useState("");
 
   const handleSetSelectedCountry = country => {
     setSelectedCountry(country);
   };
 
   const handleOnChangeInput = event => {
+    try {
+    setSerchTextFieldValue(event.target.value);
     setShouldShowNoResult(true);
-    if (event.target.value === "") {
-      setCountriesList([]);
-      return;
-    }
-    const filteredQuestions =
-      formattedCountriesList &&
-      formattedCountriesList.length > 0 &&
-      formattedCountriesList.filter(function (obj) {
-        return (
-          obj.code.toLowerCase().includes(event.target.value.toLowerCase()) ||
-          obj.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
-          obj.sub_name.toLowerCase().includes(event.target.value.toLowerCase())
-        );
-      });
 
-    setCountriesList(filteredQuestions);
+      if (event.target.value === "") {
+        setShouldShowNoResult(false);
+        setCountriesList([]);
+        return;
+      }
+      const filteredQuestions =
+        formattedCountriesList &&
+        formattedCountriesList.length > 0 &&
+        formattedCountriesList.filter(function (obj) {
+          return (
+            obj.code.toLowerCase().includes(event.target.value.toLowerCase()) ||
+            obj.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
+            obj.sub_name.toLowerCase().includes(event.target.value.toLowerCase())
+          );
+        });
+
+      setCountriesList(filteredQuestions);
+    } catch {}
   };
 
   const handleTextFieldOnFoucs = () => {
@@ -155,11 +165,9 @@ const PhoneComponent = () => {
   };
 
   const handleChangePhoneInput = event => {
-    if (event.target.value === "") {
-      setOpenWidget(true);
-    } else {
-      setOpenWidget(false);
-    }
+    setShouldShowNoResult(false);
+    setCountriesList([]);
+    setSerchTextFieldValue("")
   };
 
   return (
@@ -199,9 +207,10 @@ const PhoneComponent = () => {
                     className={classes.serchInput}
                     placeholder={SEARCH_INPUT_PLEACE_HOLDER}
                     onChange={handleOnChangeInput}
+                    value={searchTextFieldValue}
                   />
 
-                  {countriesList.length === 0 ? (
+                  {Array.isArray(countriesList) && countriesList.length === 0 ? (
                     <>
                       {shouldShowNoResult && (
                         <Typography className={classes.noResult}>{NO_RESULT}</Typography>
@@ -209,7 +218,7 @@ const PhoneComponent = () => {
                     </>
                   ) : (
                     <>
-                      {countriesList.map((country) => {
+                      {countriesList.map(country => {
                         return (
                           <div key={country.code + country.name}>
                             <div
