@@ -69,6 +69,7 @@ const useStyles = makeStyles(theme =>
     }
   })
 );
+
 const QuestionsFields = [
   { id: 1, question: "Budget", disabled: false },
   { id: 2, question: "Food allergies", disabled: false },
